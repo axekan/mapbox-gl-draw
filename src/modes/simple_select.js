@@ -164,6 +164,7 @@ SimpleSelect.startOnActiveFeature = function(state, e) {
 };
 
 SimpleSelect.clickOnFeature = function(state, e) {
+  if (e.defaultPrevented) return;
   // Stop everything
   doubleClickZoom.disable(this);
   this.stopExtendedInteractions(state);
