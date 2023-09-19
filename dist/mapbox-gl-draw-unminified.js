@@ -501,7 +501,8 @@ function featuresAt$1(event, bbox, ctx, buffer) {
   var box = (event) ? mapEventToBoundingBox(event, buffer) : bbox;
 
   var queryParams = {};
-  if (ctx.options.styles) { queryParams.layers = ctx.options.styles.map(function (s) { return s.id; }); }
+
+  if (ctx.options.styles) { queryParams.layers = ctx.options.styles.map(function (s) { return s.id; }).filter(function (id) { return ctx.map.getLayer(id) != null; }); }
 
   var features = ctx.map.queryRenderedFeatures(box, queryParams)
     .filter(function (feature) { return META_TYPES.indexOf(feature.properties.meta) !== -1; });
@@ -4075,6 +4076,7 @@ SimpleSelect.startOnActiveFeature = function(state, e) {
 SimpleSelect.clickOnFeature = function(state, e) {
   var this$1$1 = this;
 
+  if (e.defaultPrevented) { return; }
   // Stop everything
   doubleClickZoom.disable(this);
   this.stopExtendedInteractions(state);
@@ -6904,6 +6906,9 @@ function setupAPI(ctx, api) {
         // If a feature of that id has already been created, and we are swapping it out ...
         var internalFeature$1 = ctx.store.get(feature.id);
         internalFeature$1.properties = feature.properties;
+        if (!isEqual(internalFeature$1.properties, feature.properties)) {
+          ctx.store.featureChanged(internalFeature$1.id);
+        }
         if (!isEqual(internalFeature$1.getCoordinates(), feature.geometry.coordinates)) {
           internalFeature$1.incomingCoords(feature.geometry.coordinates);
         }
