@@ -16,8 +16,8 @@ export default function ModeInterface(ctx) {
  * @name this.setSelected
  * @param {DrawFeature[]} - whats selected as a [DrawFeature](https://github.com/mapbox/mapbox-gl-draw/blob/main/src/feature_types/feature.js)
  */
-ModeInterface.prototype.setSelected = function(features) {
-  return this._ctx.store.setSelected(features);
+ModeInterface.prototype.setSelected = function(features, opts) {
+  return this._ctx.store.setSelected(features, opts);
 };
 
 /**
